@@ -60,8 +60,8 @@ async function start(){
                 
                 //console.log(product_links.length);
                 
-                /* ===== For Testing Only ===== */
-                //product_links = ["https://www.daraz.com.bd/products/usb-usb-usb-i-i199397793-s1146689857.html?spm=a2a0e.home.just4u.1.148312f7iRaqHo&scm=1007.28811.281388.0&pvid=3086fc4b-1206-44b1-8e47-131eab72f162&clickTrackInfo=pvid%3A3086fc4b-1206-44b1-8e47-131eab72f162%3Bchannel_id%3A0000%3Bmt%3Ahot%3Bitem_id%3A199397793%3B"];
+                /* ===== For Testing Purpose Only ===== */
+                product_links = ["https://www.daraz.com.bd/products/kieslect-l11-mart-watch-pink-i240649860-s1183912148.html?spm=a2a0e.seller.list.76.5f2d561354whVK&mp=1"];
                 
                 //Get Product Info
                 for (item of product_links) {
@@ -337,8 +337,12 @@ async function start(){
 
 //Process Image FileName
 async function processImgFileName(image, title){
-    const imageName = await image.split("/").pop();
-    const imageExtension = await imageName.split(".").pop();
+    //const imageName = await image.split("/").pop();
+    //let imageExtension = await imageName.split(".").pop();
+
+    let imageExtension = image.match(/\.(gif|jpe?g|tiff?|png|webp|bmp|svg)/gi);
+    imageExtension == null ? imageExtension = "jpg" : imageExtension = imageExtension.pop().split(".").pop();
+
     let imageTitle = await title.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '-');
 
     //Characters Limit
