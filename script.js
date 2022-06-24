@@ -61,7 +61,7 @@ async function start(){
                 //console.log(product_links.length);
                 
                 /* ===== For Testing Purpose Only ===== */
-                product_links = ["https://www.daraz.com.bd/products/kieslect-l11-mart-watch-pink-i240649860-s1183912148.html?spm=a2a0e.seller.list.76.5f2d561354whVK&mp=1"];
+                //product_links = ["https://www.daraz.com.bd/products/kieslect-l11-mart-watch-pink-i240649860-s1183912148.html?spm=a2a0e.seller.list.76.5f2d561354whVK&mp=1"];
                 
                 //Get Product Info
                 for (item of product_links) {
