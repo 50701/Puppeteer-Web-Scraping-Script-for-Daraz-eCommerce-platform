@@ -340,8 +340,8 @@ async function processImgFileName(image, title){
     //const imageName = await image.split("/").pop();
     //let imageExtension = await imageName.split(".").pop();
 
-    let imageExtension = image.match(/\.(gif|jpe?g|tiff?|png|webp|bmp|svg)/gi);
-    imageExtension == null ? imageExtension = "jpg" : imageExtension = imageExtension.pop().split(".").pop();
+    let imageExtension = await image.match(/\.(gif|jpe?g|tiff?|png|webp|bmp|svg)/gi);
+    await imageExtension == null ? imageExtension = "jpg" : imageExtension = imageExtension.pop().split(".").pop();
 
     let imageTitle = await title.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '-');
 
