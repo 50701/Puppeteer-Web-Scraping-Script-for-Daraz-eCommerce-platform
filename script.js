@@ -117,13 +117,26 @@ async function start(){
                     categories = categories.toString().replace(/,/g, " > ");
 
 
+                    //Create Images Sub Directory 
+                    count++;
+                    var imgSubDir = `./images/products-${unqNum}/${count}/`;
+                        
+                    try{
+                        await fsp.stat(imgSubDir);
+                    }
+                    catch(err){
+                        //console.log(err);
+                        await fsp.mkdir(imgSubDir, { recursive: true });
+                    }
+
+
                     //Images URL
                     await page2.waitForSelector(".item-gallery__image-wrapper img", {timeout : 0});
                     let images = await page2.$$eval(".item-gallery__image-wrapper img", (elements) => {
                         return elements.map((item) => item.src);
                     });
 
-                    //Save Images Locally
+                    //Save Images Locally 
                     const savedImages = [];
                     for(let image of images){
                         const page3 = await browser.newPage();
@@ -132,15 +145,15 @@ async function start(){
 
                         let val = await processImgFileName(image, title);
 
-                        let filePath = `./images/products-${unqNum}/`;
+                        let filePath = imgSubDir;
                         const fileName = `${val.imageTitle}-${Date.now()}.${val.imageExtension}`;
                         await fsp.writeFile(`${filePath}${fileName}`, await imageFile.buffer());
 
                         if(process.env.IMAGE_LOCATION){
                             if(process.env.IMAGE_LOCATION.charAt(process.env.IMAGE_LOCATION.length - 1) != "/"){
-                                filePath = process.env.IMAGE_LOCATION + "/" + `products-${unqNum}/`;
+                                filePath = process.env.IMAGE_LOCATION + "/" + `products-${unqNum}/${count}/`;
                             }else{
-                                filePath = process.env.IMAGE_LOCATION + `products-${unqNum}/`;
+                                filePath = process.env.IMAGE_LOCATION + `products-${unqNum}/${count}/`;
                             }
                         }
 
@@ -204,15 +217,15 @@ async function start(){
                                 
                                 let val = await processImgFileName(image, title);
                                 
-                                let filePath = `./images/products-${unqNum}/`;
+                                let filePath = imgSubDir;
                                 const fileName = `${val.imageTitle}-${Date.now()}.${val.imageExtension}`;
                                 await fsp.writeFile(`${filePath}${fileName}`, await imageFile.buffer());
 
                                 if(process.env.IMAGE_LOCATION){
                                     if(process.env.IMAGE_LOCATION.charAt(process.env.IMAGE_LOCATION.length - 1) != "/"){
-                                        filePath = process.env.IMAGE_LOCATION + "/" + `products-${unqNum}/`;
+                                        filePath = process.env.IMAGE_LOCATION + "/" + `products-${unqNum}/${count}/`;
                                     }else{
-                                        filePath = process.env.IMAGE_LOCATION + `products-${unqNum}/`;
+                                        filePath = process.env.IMAGE_LOCATION + `products-${unqNum}/${count}/`;
                                     }
                                 }
 
@@ -293,8 +306,8 @@ async function start(){
                             }
                         }
                     );
-
-                    console.log("→ " + (++count));
+                    
+                    console.log("→ " + (count));
 
                     await page2.close();
                 }
