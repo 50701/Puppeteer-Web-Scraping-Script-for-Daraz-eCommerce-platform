@@ -75,7 +75,7 @@ async function start(){
 
                 //Start Grabbing From
                 /* specify the num from where you want to start grabbing your products */
-                if( startFrom != null ){
+                if( startFrom != null && product_links.length >= startFrom ){
                     product_links = product_links.slice(startFrom - 1);
                 }
                 
@@ -339,7 +339,7 @@ async function start(){
         }
 
         //Get All Info
-        await get_all_info();
+        await get_all_info(40);
 
         //Pagination
         await page.reload({waitUntil : "load"});
