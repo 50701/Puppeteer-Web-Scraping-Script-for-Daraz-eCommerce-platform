@@ -21,6 +21,19 @@ async function start(){
         //Paste your Shop Link here [all products]
         await page.goto("https://www.daraz.com.bd/motion-view/?q=All-Products&langFlag=en&from=wangpu&lang=en&pageTypeId=2", {waitUntil : "load"});
         
+        //Go to Specific Page Number and Start Grabbing from there
+        let pagiNum = null; /* specify pagination page number */
+        let pagination_available = await page.$(".ant-pagination-disabled.ant-pagination-next");
+        
+        if( pagiNum != null && pagination_available == null ){
+            while( pagiNum != 0 ){
+                await page.click(".ant-pagination-next");
+                await page.reload({waitUntil : "load"});
+                pagiNum--;
+            }
+        }
+
+        
         //Global Variables
         let allData = [];
         let unqNum = Date.now();
@@ -45,10 +58,10 @@ async function start(){
         ];
 
         //Create CSV file
-        let csvFile = `./products-${unqNum}.csv`;
+        let csvFile = `./csv-files/products-${unqNum}.csv`;
         await fsp.writeFile(csvFile, csvHeader.join() + "\n");
 
-        async function get_all_info(){
+        async function get_all_info( startFrom = null ){
             try{
                 //Product Links
                 await page.waitForSelector(".gridItem--Yd0sa", {timeout : 0});
@@ -59,6 +72,12 @@ async function start(){
                 );
                 
                 //console.log(product_links.length);
+
+                //Start Grabbing From
+                /* specify the num from where you want to start grabbing your products */
+                if( startFrom != null ){
+                    product_links = product_links.slice(startFrom - 1);
+                }
                 
                 /* ===== For Testing Purpose Only ===== */
                 //product_links = ["https://www.daraz.com.bd/products/kieslect-l11-mart-watch-pink-i240649860-s1183912148.html?spm=a2a0e.seller.list.76.5f2d561354whVK&mp=1"];
