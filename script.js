@@ -19,7 +19,7 @@ async function start(){
         await page.setDefaultNavigationTimeout(0);
 
         //Paste your Shop Link here [all products]
-        await page.goto("https://www.daraz.com.bd/motion-view/?q=All-Products&langFlag=en&from=wangpu&lang=en&pageTypeId=2", {waitUntil : "load"});
+        await page.goto("https://www.daraz.com.bd/abrity-world/?q=All-Products&langFlag=en&from=wangpu&lang=en&pageTypeId=2", {waitUntil : "load"});
         
         //Go to Specific Page Number and Start Grabbing from there
         let pagiNum = null; /* specify pagination page number */
@@ -192,21 +192,37 @@ async function start(){
                     
 
                     //Product SubHeadings
-                    await page2.waitForSelector(".pdp-mod-section-title", {timeout : 0});
-                    let subHeadings = await page2.$$eval(".pdp-mod-section-title", (productSubheadings) => {
-                        return productSubheadings.map((item) => item.textContent);
-                    });
+                    let productDetails_heading = "";
+                    let specifications_heading = "";
+                    let product_subHeading_class = await page2.$(".pdp-mod-section-title");
+                    if(product_subHeading_class != null){
+                        await page2.waitForSelector(".pdp-mod-section-title", {timeout : 0});
+                        let subHeadings = await page2.$$eval(".pdp-mod-section-title", (productSubheadings) => {
+                            return productSubheadings.map((item) => item.textContent);
+                        });
+
+                        //Product Details Heading
+                        productDetails_heading = subHeadings[0];
+
+                        //Specifications Heading
+                        specifications_heading = subHeadings[1];
+                    }
+                    
 
 
-                    //Product Details Heading
-                    let productDetails_heading = subHeadings[0];
+                    
 
 
                     //Product Highlights
-                    await page2.waitForSelector(".pdp-product-highlights", {timeout : 0});
-                    let description = await page2.$eval(".pdp-product-highlights", (productHighlights) => {
-                        return productHighlights.innerHTML;
-                    });
+                    let description = "";
+                    let product_highlights_class = await page2.$(".pdp-product-highlights");
+                    if(product_highlights_class != null){
+                        await page2.waitForSelector(".pdp-product-highlights", {timeout : 0});
+                        description = await page2.$eval(".pdp-product-highlights", (productHighlights) => {
+                            return productHighlights.innerHTML;
+                        });
+                    }
+                    
 
                     
                     //Detail Content
@@ -257,22 +273,29 @@ async function start(){
                         //console.log(htmlContent);
                     }
                     
-                    //Specifications Heading
-                    let specifications_heading = subHeadings[1];
-
-
+                    
                     //Specifications
-                    await page2.waitForSelector(".pdp-general-features", {timeout : 0});
-                    let specifications = await page2.$eval(".pdp-general-features", (el) => {
-                        return el.innerHTML;
-                    });
+                    let specifications = "";
+                    let specification_class = await page2.$(".pdp-general-features");
+                    if(specification_class != null){
+                        await page2.waitForSelector(".pdp-general-features", {timeout : 0});
+                        specifications = await page2.$eval(".pdp-general-features", (el) => {
+                            return el.innerHTML;
+                        });
+                    }
+                    
 
 
                     //Box Content
-                    await page2.waitForSelector(".box-content", {timeout : 0});
-                    let boxContent = await page2.$eval(".box-content", (el) => {
-                        return el.outerHTML;
-                    });
+                    let boxContent = "";
+                    let boxContent_class = await page2.$(".box-content");
+                    if(boxContent_class != null){
+                        await page2.waitForSelector(".box-content", {timeout : 0});
+                        boxContent = await page2.$eval(".box-content", (el) => {
+                            return el.outerHTML;
+                        });
+                    }
+                    
 
                     //Aggregate Product's Description
                     let product_Description = 
@@ -339,7 +362,7 @@ async function start(){
         }
 
         //Get All Info
-        await get_all_info(40);
+        await get_all_info();
 
         //Pagination
         await page.reload({waitUntil : "load"});
@@ -348,7 +371,8 @@ async function start(){
         while(pagination_disabled == null){
             await page.click(".ant-pagination-next");
             //await page.waitForTimeout(3000);
-            await page.waitForSelector(".gridItem--Yd0sa", {timeout : 0});
+            //await page.waitForSelector(".gridItem--Yd0sa", {timeout : 0});
+            await page.reload({waitUntil : "load"});
             await get_all_info();
             pagination_disabled = await page.$(".ant-pagination-disabled.ant-pagination-next");
         }
