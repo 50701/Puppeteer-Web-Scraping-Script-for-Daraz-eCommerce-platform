@@ -19,10 +19,10 @@ async function start(){
         await page.setDefaultNavigationTimeout(0);
 
         //Paste your Shop Link here [all products]
-        await page.goto("https://www.daraz.com.bd/abrity-world/?q=All-Products&langFlag=en&from=wangpu&lang=en&pageTypeId=2", {waitUntil : "load"});
+        await page.goto("https://www.daraz.com.bd/glamygirl/?q=All-Products&langFlag=en&from=wangpu&lang=en&pageTypeId=2", {waitUntil : "load"});
         
         //Go to Specific Page Number and Start Grabbing from there
-        let pagiNum = null; /* specify pagination page number */
+        let pagiNum = null; /* null | specify pagination page number */
         let pagination_available = await page.$(".ant-pagination-disabled.ant-pagination-next");
         
         if( pagiNum != null && pagination_available == null ){
